@@ -1,13 +1,20 @@
+import 'dart:convert';
 import 'questions.dart';
+import 'package:http/http.dart' as http;
 
 class QuizBrain {
   int _questionNumber = 0;
 
-  final List<Question> _questionBank = [
-    Question('Question 1', false),
-    Question('Question 2', true),
-    Question('Question 3', false),
-  ];
+  List<Question> _questionBank = [];
+
+  // Fetch questions from the API and map them to Question objects using the fromJson factory constructor
+  Future<bool> fetchQuestions() async {
+    final fetchedQuestions =
+        await http.get(Uri.parse('http://localhost:3000/api/questions/get'));
+    final List<dynamic> data = jsonDecode(fetchedQuestions.body);
+    _questionBank = data.map((item) => Question.fromJson(item)).toList();
+    return true;
+  }
 
   void nextQuestion() {
     if (_questionNumber < _questionBank.length - 1) {
@@ -31,3 +38,20 @@ class QuizBrain {
     _questionNumber = 0;
   }
 }
+
+// Basic code to fetch data from the server
+    // if (kDebugMode) {
+    //   print("fetching details from server");
+    //   try {
+    //     if (fetchedQuestions.statusCode == 200) {
+    //       String data = fetchedQuestions.body;
+    //       var decodedData = jsonDecode(data);
+    //       print(decodedData);
+    //     } else {
+    //       print("Error: ${fetchedQuestions.statusCode}");
+    //     }
+    //   } catch (e) {
+    //     print("Error: $e");
+    //   }
+    //   // print(fetchedQuestions);
+    // }

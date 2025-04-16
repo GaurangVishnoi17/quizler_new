@@ -30,6 +30,22 @@ class QuizPage extends StatefulWidget {
 }
 
 class _QuizPageState extends State<QuizPage> {
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    loadQuestions();
+  }
+
+  Future<void> loadQuestions() async {
+    bool isLoaded = await quizBrain.fetchQuestions();
+    setState(() {
+      _loading =
+          !isLoaded; // Set loading to false if questions are loaded successfully
+    });
+  }
+
   List<Icon> scoreKeeper = [];
   int correctAnswerCount = 0;
 
@@ -68,75 +84,77 @@ class _QuizPageState extends State<QuizPage> {
       desc: "You scored $correctAnswerCount / ${scoreKeeper.length}",
       buttons: [
         DialogButton(
-          onPressed: () => Navigator.pop(context),
-          width: 120,
-           child: const Text(
-            "Cancel",
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          )
-        )
+            onPressed: () => Navigator.pop(context),
+            width: 120,
+            child: const Text(
+              "Cancel",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ))
       ],
     ).show();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: <Widget>[
-        Expanded(
-          flex: 5,
-          child: Padding(
-            padding: EdgeInsets.all(10.0),
-            child: Center(
-              child: Text(
-                quizBrain.getQuestion(),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 25.0,
-                  color: Colors.white,
+    // quizBrain.fetchQuestions();
+    return _loading
+        ? const Center(child: CircularProgressIndicator())
+        : Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              Expanded(
+                flex: 5,
+                child: Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Center(
+                    child: Text(
+                      quizBrain.getQuestion(),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 25.0,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                 ),
               ),
-            ),
-          ),
-        ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: TextButton(
-              child: const Text(
-                'Yes',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20.0,
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: TextButton(
+                    child: const Text(
+                      'Yes',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20.0,
+                      ),
+                    ),
+                    onPressed: () {
+                      checkAnswer(true);
+                    },
+                  ),
                 ),
               ),
-              onPressed: () {
-                checkAnswer(true);
-              },
-            ),
-          ),
-        ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: TextButton(
-              child: const Text(
-                'No',
-                style: TextStyle(
-                  fontSize: 20.0,
-                  color: Colors.white,
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(15.0),
+                  child: TextButton(
+                    child: const Text(
+                      'No',
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        color: Colors.white,
+                      ),
+                    ),
+                    onPressed: () {
+                      checkAnswer(false);
+                    },
+                  ),
                 ),
               ),
-              onPressed: () {
-                checkAnswer(false);
-              },
-            ),
-          ),
-        ),
-        Row(children: scoreKeeper)
-      ],
-    );
+              Row(children: scoreKeeper)
+            ],
+          );
   }
 }
