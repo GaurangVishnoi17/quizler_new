@@ -12,15 +12,31 @@ class Quizzler extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Scaffold(
-        backgroundColor: Colors.grey.shade900,
-        body: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            child: QuizPage(),
-          ),
-        ),
-      ),
+      initialRoute: '/second',
+      routes: {
+        '/': (context) => Scaffold(
+              body: SafeArea(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: LoginPage(),
+                ),
+              ),
+            ),
+        '/second': (context) => QuizPage()
+      },
+    );
+  }
+}
+
+class LoginPage extends StatefulWidget {
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: Text('Login Page'),
     );
   }
 }
@@ -96,65 +112,78 @@ class _QuizPageState extends State<QuizPage> {
 
   @override
   Widget build(BuildContext context) {
-    // quizBrain.fetchQuestions();
     return _loading
         ? const Center(child: CircularProgressIndicator())
-        : Column(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Expanded(
-                flex: 5,
-                child: Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Center(
-                    child: Text(
-                      quizBrain.getQuestion(),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontSize: 25.0,
-                        color: Colors.white,
+        : Scaffold(
+            appBar: AppBar(title: const Text('Quizzler')),
+            backgroundColor: Colors.blueGrey[900],
+            body: SafeArea(
+              child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: <Widget>[
+                      Expanded(
+                        flex: 5,
+                        child: Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Center(
+                            child: Text(
+                              quizBrain.getQuestion(),
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 25.0,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: TextButton(
-                    child: const Text(
-                      'Yes',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20.0,
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: TextButton(
+                            style: TextButton.styleFrom(
+                              backgroundColor: Colors.green,
+                            ),
+                            child: const Text(
+                              'Yes',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20.0,
+                              ),
+                            ),
+                            onPressed: () {
+                              checkAnswer(true);
+                            },
+                          ),
+                        ),
                       ),
-                    ),
-                    onPressed: () {
-                      checkAnswer(true);
-                    },
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: TextButton(
-                    child: const Text(
-                      'No',
-                      style: TextStyle(
-                        fontSize: 20.0,
-                        color: Colors.white,
+                      Expanded(
+                        child: Padding(
+                          padding: const EdgeInsets.all(15.0),
+                          child: TextButton(
+                            style: TextButton.styleFrom(
+                              backgroundColor: Colors.red,
+                            ),
+                            child: const Text(
+                              'No',
+                              style: TextStyle(
+                                fontSize: 20.0,
+                                color: Colors.white,
+                              ),
+                            ),
+                            onPressed: () {
+                              checkAnswer(false);
+                            },
+                          ),
+                        ),
                       ),
-                    ),
-                    onPressed: () {
-                      checkAnswer(false);
-                    },
-                  ),
-                ),
-              ),
-              Row(children: scoreKeeper)
-            ],
+                      Row(children: scoreKeeper)
+                    ],
+                  )),
+            ),
           );
   }
 }
