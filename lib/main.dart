@@ -12,16 +12,9 @@ class Quizzler extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      initialRoute: '/second',
+      initialRoute: '/',
       routes: {
-        '/': (context) => Scaffold(
-              body: SafeArea(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  child: LoginPage(),
-                ),
-              ),
-            ),
+        '/': (context) => LoginPage(),
         '/second': (context) => QuizPage()
       },
     );
@@ -35,8 +28,41 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Login Page'),
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Container(
+                  color: Colors.blue,
+                )
+              ),
+              Expanded(
+                child: TextField(
+                  onChanged: (value) {},
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Username',
+                  ),
+                ),
+              ),
+              Expanded(
+                child: TextField(
+                  onChanged: (value) {},
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    labelText: 'Username',
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
