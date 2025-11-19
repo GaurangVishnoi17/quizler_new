@@ -30,36 +30,76 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 10.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Container(
-                  color: Colors.blue,
-                )
-              ),
-              Expanded(
-                child: TextField(
-                  onChanged: (value) {},
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Username',
+        child: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color(0xFF003366), // Deep Blue
+                Color(0xFF66CCFF), // Light Blue
+              ],
+            ),
+          ),
+          child: const Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: Text(
+                    'LOGIN',
+                    style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
                   ),
                 ),
-              ),
-              Expanded(
-                child: TextField(
-                  onChanged: (value) {},
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    labelText: 'Username',
-                  ),
-                ),
-              ),
-            ],
+                // Text fields
+                LoginTextField(label: 'USERNAME'),
+                LoginTextField(label: 'PASSWORD', obscureText: true),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class LoginTextField extends StatelessWidget {
+  final String label;
+  final bool obscureText;
+  final Function(String)? onChanged;
+
+  const LoginTextField({
+    required this.label,
+    this.obscureText = false,
+    this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 15.0),
+      child: TextField(
+        obscureText: obscureText,
+        onChanged: onChanged ?? (value) {},
+        style: const TextStyle(color: Colors.white),
+        decoration: InputDecoration(
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+          labelText: label,
+          labelStyle: const TextStyle(color: Colors.white),
+          border: const OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.white, width: 1),
+          ),
+          enabledBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.white, width: 1),
+          ),
+          focusedBorder: const OutlineInputBorder(
+            borderSide: BorderSide(color: Colors.white, width: 2),
           ),
         ),
       ),
