@@ -10,7 +10,7 @@ class QuizBrain {
   // Fetch questions from the API and map them to Question objects using the fromJson factory constructor
   Future<bool> fetchQuestions() async {
     final fetchedQuestions =
-        await http.get(Uri.parse('http://10.122.235.62:3000/api/questions/get'));
+        await http.get(Uri.parse('http://10.192.158.62:3000/api/questions/get'));
     final List<dynamic> data = jsonDecode(fetchedQuestions.body);
     _questionBank = data.map((item) => Question.fromJson(item)).toList();
     return true;
