@@ -11,6 +11,9 @@ class Quizzler extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       initialRoute: '/',
+      theme: ThemeData(
+        fontFamily: 'Monserat',
+      ),
       routes: {
         '/': (context) => LoginPage(),
         '/quizpage': (context) => QuizPage()

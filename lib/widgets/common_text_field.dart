@@ -4,11 +4,13 @@ class CommonTextField extends StatelessWidget {
   final String label;
   final bool obscureText;
   final Function(String)? onChanged;
+  final TextEditingController? controller;
 
   const CommonTextField({
     super.key,
     required this.label,
     this.obscureText = false,
+    this.controller,
     this.onChanged,
   });
 
@@ -18,7 +20,7 @@ class CommonTextField extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 15.0),
       child: TextField(
         obscureText: obscureText,
-        onChanged: onChanged ?? (value) {},
+        controller: controller,
         style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
           contentPadding:

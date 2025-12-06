@@ -7,6 +7,9 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool x = true;
+  // Controllers for text fields
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +42,14 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 // Text fields
-                const CommonTextField(label: 'USERNAME'),
-                const CommonTextField(label: 'PASSWORD', obscureText: true),
+                CommonTextField(
+                  label: 'USERNAME',
+                  controller: emailController,
+                ),
+                CommonTextField(
+                    label: 'PASSWORD',
+                    controller: passwordController,
+                    obscureText: true),
                 // Login Button
                 SizedBox(
                   width: double.infinity,
@@ -62,6 +71,8 @@ class _LoginPageState extends State<LoginPage> {
                       ),
                     ),
                     onPressed: () {
+                      print(emailController.text);
+                      print(passwordController.text);
                       if (x) {
                         Navigator.pushNamed(
                             context, '/quizpage'); // <-- Routing here
