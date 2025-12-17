@@ -30,7 +30,6 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     try {
-      print('$apiPath' 'users/login');
       final response = await http.post(
         Uri.parse('$apiPath' 'users/login'),
         headers: {
@@ -44,10 +43,17 @@ class _LoginPageState extends State<LoginPage> {
 
       isLoading = false;
 
-      print(response);
-        print(jsonDecode(response.body));
+      final decodedBody = jsonDecode(response.body);
 
-      if (response.statusCode == 200) {
+      if (response.statusCode == 200 && decodedBody['success'] == true) {
+        // set data to local storage or phone storage if login is sucessful.
+        return decodedBody['user'];
+      } else if (response.statusCode == 400) {
+        print('Required');
+      } else if (response.statusCode == 401) {
+        print('logging failed');
+      } else if (response.statusCode == 500) {
+        print('server failed');
       }
     } catch (error) {
       setState(() {
@@ -118,8 +124,8 @@ class _LoginPageState extends State<LoginPage> {
                     onPressed: () {
                       String email = emailController.text;
                       String password = passwordController.text;
-
-                      login();
+                      // No need to print the value if the values are set in to some storages.
+                      print(login());
 
                       if (1 == 1) {
                         // Navigator.pushNamed(
