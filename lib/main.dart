@@ -12,7 +12,7 @@ class Quizzler extends StatelessWidget {
     return MaterialApp(
       initialRoute: '/',
       theme: ThemeData(
-        fontFamily: 'Monserat',
+        fontFamily: 'Inter',
       ),
       routes: {
         '/': (context) => LoginPage(),

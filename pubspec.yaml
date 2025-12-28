@@ -90,8 +90,12 @@ flutter:
   fonts:
     - family: Monserat
       fonts:
-        - asset: assets/Montserrat-VariableFont_wght.ttf
-          weight: 700      
+        - asset: assets/font/Montserrat-VariableFont_wght.ttf
+          weight: 700
+    - family: Inter
+      fonts:
+        - asset: assets/font/Inter-VariableFont_opsz,wght.ttf
+          weight: 400      
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages

@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:quizzler/classes/user.dart';
 import '../widgets/common_text_field.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import './../path.dart';
+import '../classes/loginResponse.dart';
+import '../enum/enum.dart';
 
 class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
@@ -14,7 +17,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  Future<void> login() async {
+  Future<LoginResponse> login() async {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
 
@@ -22,7 +25,7 @@ class _LoginPageState extends State<LoginPage> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Email and password required')),
       );
-      return;
+      return LoginResponse(status: LoginStatus.missingFields);
     }
 
     setState(() {
@@ -46,19 +49,39 @@ class _LoginPageState extends State<LoginPage> {
       final decodedBody = jsonDecode(response.body);
 
       if (response.statusCode == 200 && decodedBody['success'] == true) {
+        return LoginResponse(
+          status: LoginStatus.success,
+          user: User.fromJson(decodedBody['user']),
+        );
         // set data to local storage or phone storage if login is sucessful.
-        return decodedBody['user'];
+        // return decodedBody['user'];
       } else if (response.statusCode == 400) {
-        print('Required');
+        return LoginResponse(
+            status: LoginStatus.missingFields,
+            message: 'All fields are required');
       } else if (response.statusCode == 401) {
-        print('logging failed');
+        return LoginResponse(
+          status: LoginStatus.invalidCredentials,
+          message: 'Invalid email or password',
+        );
       } else if (response.statusCode == 500) {
-        print('server failed');
+        return LoginResponse(
+          status: LoginStatus.serverError,
+          message: 'Server error',
+        );
       }
+      return LoginResponse(
+        status: LoginStatus.unknownError,
+        message: 'Something went wrong',
+      );
     } catch (error) {
       setState(() {
         isLoading = false;
       });
+      return LoginResponse(
+        status: LoginStatus.networkError,
+        message: 'No internet connection',
+      );
     }
   }
 
@@ -121,15 +144,14 @@ class _LoginPageState extends State<LoginPage> {
                             BorderRadius.circular(5), // Rounded corners
                       ),
                     ),
-                    onPressed: () {
-                      String email = emailController.text;
-                      String password = passwordController.text;
+                    onPressed: () async {
                       // No need to print the value if the values are set in to some storages.
-                      print(login());
+                      final LoginResponse response = await login();
 
-                      if (1 == 1) {
-                        // Navigator.pushNamed(
-                        //     context, '/quizpage'); // <-- Routing here
+                      print(response.status);
+                      if (mounted && response.status == LoginStatus.success) {
+                        Navigator.pushNamed(
+                            context, '/quizpage'); // <-- Routing here
                       }
                     },
                     child: const Text(

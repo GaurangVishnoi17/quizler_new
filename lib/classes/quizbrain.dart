@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'questions.dart';
 import 'package:http/http.dart' as http;
-import 'path.dart';
+import '../path.dart';
 
 class QuizBrain {
   int _questionNumber = 0;
@@ -39,20 +39,3 @@ class QuizBrain {
     _questionNumber = 0;
   }
 }
-
-// Basic code to fetch data from the server
-    // if (kDebugMode) {
-    //   print("fetching details from server");
-    //   try {
-    //     if (fetchedQuestions.statusCode == 200) {
-    //       String data = fetchedQuestions.body;
-    //       var decodedData = jsonDecode(data);
-    //       print(decodedData);
-    //     } else {
-    //       print("Error: ${fetchedQuestions.statusCode}");
-    //     }
-    //   } catch (e) {
-    //     print("Error: $e");
-    //   }
-    //   // print(fetchedQuestions);
-    // }
