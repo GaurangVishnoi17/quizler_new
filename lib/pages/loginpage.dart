@@ -4,7 +4,7 @@ import '../widgets/common_text_field.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import './../path.dart';
-import '../classes/loginResponse.dart';
+import '../classes/login_response.dart';
 import '../enum/enum.dart';
 
 class LoginPage extends StatefulWidget {
