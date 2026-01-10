@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.6
   rflutter_alert: ^2.0.7
   http: ^1.2.2
+  flutter_secure_storage: ^10.0.0
 
 dev_dependencies:
   flutter_test:

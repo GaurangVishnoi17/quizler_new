@@ -6,6 +6,9 @@ import 'dart:convert';
 import './../path.dart';
 import '../classes/login_response.dart';
 import '../enum/enum.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+final storage = FlutterSecureStorage();
 
 class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
@@ -35,27 +38,45 @@ class _LoginPageState extends State<LoginPage> {
     try {
       final response = await http.post(
         Uri.parse('$apiPath' 'users/login'),
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'email': email,
           'password': password,
         }),
       );
 
-      isLoading = false;
-
-      final decodedBody = jsonDecode(response.body);
-
-      if (response.statusCode == 200 && decodedBody['success'] == true) {
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        await storage.write(key: 'accessToken', value: data['accessToken']);
+        await storage.write(key: 'refreshToken', value: data['refreshToken']);
         return LoginResponse(
           status: LoginStatus.success,
-          user: User.fromJson(decodedBody['user']),
         );
-        // set data to local storage or phone storage if login is sucessful.
-        // return decodedBody['user'];
-      } else if (response.statusCode == 400) {
+      }
+      // final response = await http.post(
+      //   Uri.parse('$apiPath' 'users/login'),
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      //   body: jsonEncode({
+      //     'email': email,
+      //     'password': password,
+      //   }),
+      // );
+
+      // isLoading = false;
+
+      // final decodedBody = jsonDecode(response.body);
+
+      // if (response.statusCode == 200 && decodedBody['success'] == true) {
+      //   return LoginResponse(
+      //     status: LoginStatus.success,
+      //     user: User.fromJson(decodedBody['user']),
+      //   );
+      //   // set data to local storage or phone storage if login is sucessful.
+      //   // return decodedBody['user'];
+      // }
+      else if (response.statusCode == 400) {
         return LoginResponse(
             status: LoginStatus.missingFields,
             message: 'All fields are required');
@@ -82,6 +103,45 @@ class _LoginPageState extends State<LoginPage> {
         status: LoginStatus.networkError,
         message: 'No internet connection',
       );
+    }
+  }
+
+  Future<User> fetchProfile() async {
+    final token = await storage.read(key: 'accessToken');
+    final response = await http.get(
+      Uri.parse('$apiPath' 'users/profile'),
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      return User(
+          data['id'], data['firstname'], data['lastname'], data['email']);
+    } else if (response.statusCode == 401) {
+      await refreshToken(); // token expired
+      return await fetchProfile(); // retry
+    }
+    throw Exception('Failed to fetch profile');
+  }
+
+  Future<void> refreshToken() async {
+    final refreshToken = await storage.read(key: 'refreshToken');
+    final response = await http.post(
+      Uri.parse('$apiPath' 'users/refreshToken'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode({'refreshToken': refreshToken}),
+    );
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      await storage.write(key: 'accessToken', value: data['accessToken']);
+    } else {
+      // Force logout
+      await storage.deleteAll();
+      Navigator.pushNamedAndRemoveUntil(
+          context, '/loginpage', (route) => false);
     }
   }
 
@@ -147,11 +207,17 @@ class _LoginPageState extends State<LoginPage> {
                     onPressed: () async {
                       // No need to print the value if the values are set in to some storages.
                       final LoginResponse response = await login();
-
-                      print(response.status);
-                      if (mounted && response.status == LoginStatus.success) {
+                      if (response.status == LoginStatus.success) {
+                        final profile = await fetchProfile();
+                        print(profile.firstname);
                         Navigator.pushNamed(
                             context, '/quizpage'); // <-- Routing here
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                              content:
+                                  Text(response.message ?? 'Login failed')),
+                        );
                       }
                     },
                     child: const Text(
