@@ -37,7 +37,7 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       final response = await http.post(
-        Uri.parse('$apiPath' 'users/login'),
+        Uri.parse('$apiPath' 'auth/login'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           'email': email,
@@ -129,7 +129,7 @@ class _LoginPageState extends State<LoginPage> {
   Future<void> refreshToken() async {
     final refreshToken = await storage.read(key: 'refreshToken');
     final response = await http.post(
-      Uri.parse('$apiPath' 'users/refreshToken'),
+      Uri.parse('$apiPath' 'auth/refresh'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode({'refreshToken': refreshToken}),
     );
