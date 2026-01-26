@@ -14,6 +14,41 @@ class LoginPage extends StatefulWidget {
   _LoginPageState createState() => _LoginPageState();
 }
 
+class IllustrationImg extends StatelessWidget {
+  final String path;
+  final double width;
+  final double top;
+  final double right;
+  final double bottom;
+  final double left;
+  final double angle;
+
+  const IllustrationImg({
+    super.key,
+    required this.path,
+    this.top = 0,
+    this.right = 0,
+    this.bottom = 0,
+    this.left = 0,
+    this.angle = 0,
+    this.width = 10,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      bottom: bottom,
+      right: right,
+      child: Transform.rotate(
+        angle: angle,
+        child: Image.asset(
+          path,
+          width: width,
+        ),
+      ),
+    );
+  }
+}
+
 class _LoginPageState extends State<LoginPage> {
   bool isLoading = true;
   // Controllers for text fields
@@ -149,30 +184,61 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: Container(
-          decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xFF003366), // Deep Blue
-                Color(0xFF66CCFF), // Light Blue
+          child: Stack(
+        children: [
+          Container(
+            width: double.infinity,
+            height: double.infinity,
+            decoration: BoxDecoration(color: Colors.lime[50]),
+            child: const Stack(
+              children: [
+                IllustrationImg(
+                  path: 'images/lightbulb.png',
+                  bottom: 680,
+                  right: 30,
+                  angle: 26,
+                  width: 40,
+                ),
+                IllustrationImg(
+                  path: 'images/lightbulb.png',
+                  bottom: 190,
+                  right: 410,
+                  angle: 31,
+                  width: 55,
+                ),
+                IllustrationImg(
+                  path: 'images/mario-question-mark.png',
+                  bottom: 600,
+                  right: 450,
+                  angle: 31,
+                  width: 40,
+                ),
+                IllustrationImg(
+                  path: 'images/question-mark-cartoon.png',
+                  bottom: 220,
+                  right: 120,
+                  angle: 32,
+                  width: 100,
+                ),
               ],
             ),
           ),
-          child: Padding(
+          Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Center(
-                  child: Text(
-                    'LOGIN',
-                    style: TextStyle(
-                        fontSize: 25,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
+                Center(
+                  child: Padding(
+                    padding: EdgeInsetsGeometry.symmetric(vertical: 40.0),
+                    child: Text(
+                      'Quizzler',
+                      style: TextStyle(
+                          fontSize: 62,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green[500]),
+                    ),
                   ),
                 ),
                 // Text fields
@@ -185,56 +251,60 @@ class _LoginPageState extends State<LoginPage> {
                     controller: passwordController,
                     obscureText: true),
                 // Login Button
-                SizedBox(
-                  width: double.infinity,
-                  child: OutlinedButton(
-                    style: OutlinedButton.styleFrom(
-                      backgroundColor: Colors.white, // White background
-                      padding: const EdgeInsets.symmetric(
-                        // Add padding
-                        vertical: 20,
-                        horizontal: 24,
+                Padding(
+                  padding: EdgeInsetsGeometry.symmetric(
+                      horizontal: 45.0, vertical: 30),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        backgroundColor: Colors.lightBlue, // White background
+                        padding: const EdgeInsets.symmetric(
+                          // Add padding
+                          vertical: 20,
+                          horizontal: 24,
+                        ),
+                        side: const BorderSide(
+                          color: Colors.blueAccent, // Border color
+                          width: 2,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(5), // Rounded corners
+                        ),
                       ),
-                      side: const BorderSide(
-                        color: Colors.white, // Border color
-                        width: 2,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(5), // Rounded corners
-                      ),
-                    ),
-                    onPressed: () async {
-                      // No need to print the value if the values are set in to some storages.
-                      final LoginResponse response = await login();
-                      if (response.status == LoginStatus.success) {
-                        final profile = await fetchProfile();
-                        print(profile.firstname);
-                        Navigator.pushNamed(
-                            context, '/quizpage'); // <-- Routing here
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                              content:
-                                  Text(response.message ?? 'Login failed')),
-                        );
-                      }
-                    },
-                    child: const Text(
-                      'Login',
-                      style: TextStyle(
-                        color: Colors.black, // Text color
-                        fontWeight: FontWeight.bold, // Bold text
-                        fontSize: 16,
+                      onPressed: () async {
+                        // No need to print the value if the values are set in to some storages.
+                        final LoginResponse response = await login();
+                        if (response.status == LoginStatus.success) {
+                          final profile = await fetchProfile();
+                          print(profile.firstname);
+                          Navigator.pushNamed(
+                              context, '/quizpage'); // <-- Routing here
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                                content:
+                                    Text(response.message ?? 'Login failed')),
+                          );
+                        }
+                      },
+                      child: const Text(
+                        'Login',
+                        style: TextStyle(
+                          color: Colors.white, // Text color
+                          fontWeight: FontWeight.bold, // Bold text
+                          fontSize: 18,
+                        ),
                       ),
                     ),
                   ),
-                ),
+                )
               ],
             ),
           ),
-        ),
-      ),
+        ],
+      )),
     );
   }
 }

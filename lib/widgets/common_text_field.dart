@@ -17,24 +17,24 @@ class CommonTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 15.0),
+      padding: const EdgeInsets.symmetric(vertical: 15.0, horizontal: 45),
       child: TextField(
         obscureText: obscureText,
         controller: controller,
-        style: const TextStyle(color: Colors.white),
+        style: TextStyle(color: Colors.blueAccent[600]),
         decoration: InputDecoration(
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 10, vertical: 15),
           labelText: label,
-          labelStyle: const TextStyle(color: Colors.white),
+          labelStyle: TextStyle(color: Colors.blueAccent[600]),
           border: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.white, width: 1),
+            borderSide: BorderSide(color: Colors.blueAccent, width: 1),
           ),
           enabledBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.white, width: 1),
+            borderSide: BorderSide(color: Colors.blueAccent, width: 1),
           ),
           focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(color: Colors.white, width: 2),
+            borderSide: BorderSide(color: Colors.blueAccent, width: 2),
           ),
         ),
       ),
