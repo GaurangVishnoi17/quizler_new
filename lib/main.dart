@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'pages/loginpage.dart';
 import 'pages/quizpage.dart';
+import 'pages/mainpage.dart';
 
 void main() => runApp(const Quizzler());
 
@@ -16,7 +17,8 @@ class Quizzler extends StatelessWidget {
       ),
       routes: {
         '/': (context) => LoginPage(),
-        '/quizpage': (context) => QuizPage()
+        '/quizpage': (context) => QuizPage(),
+        '/mainpage': (context) => MainPage(),
       },
     );
   }

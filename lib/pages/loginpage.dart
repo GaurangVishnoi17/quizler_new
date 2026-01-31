@@ -280,7 +280,7 @@ class _LoginPageState extends State<LoginPage> {
                           final profile = await fetchProfile();
                           print(profile.firstname);
                           Navigator.pushNamed(
-                              context, '/quizpage'); // <-- Routing here
+                              context, '/mainpage'); // <-- Routing here
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
