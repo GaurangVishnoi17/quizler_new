@@ -84,6 +84,7 @@ class _LoginPageState extends State<LoginPage> {
         final data = jsonDecode(response.body);
         await storage.write(key: 'accessToken', value: data['accessToken']);
         await storage.write(key: 'refreshToken', value: data['refreshToken']);
+        await storage.write(key: 'email', value: email);
         return LoginResponse(
           status: LoginStatus.success,
         );
@@ -277,8 +278,8 @@ class _LoginPageState extends State<LoginPage> {
                         // No need to print the value if the values are set in to some storages.
                         final LoginResponse response = await login();
                         if (response.status == LoginStatus.success) {
-                          final profile = await fetchProfile();
-                          print(profile.firstname);
+                          // final profile = await fetchProfile();
+                          // print(profile.firstname);
                           Navigator.pushNamed(
                               context, '/mainpage'); // <-- Routing here
                         } else {
