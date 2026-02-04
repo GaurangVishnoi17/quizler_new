@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:quizzler/classes/user.dart';
-import '../widgets/common_text_field.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'dart:convert';
-import './../path.dart';
+import 'dart:math' as math;
+import '../widgets/common_text_field.dart';
 import '../classes/login_response.dart';
 import '../enum/enum.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import './../path.dart';
 
 final storage = FlutterSecureStorage();
 
@@ -16,33 +17,44 @@ class LoginPage extends StatefulWidget {
 
 class IllustrationImg extends StatelessWidget {
   final String path;
-  final double width;
-  final double top;
-  final double right;
-  final double bottom;
-  final double left;
-  final double angle;
+
+  /// Positioning
+  final double? top;
+  final double? right;
+  final double? bottom;
+  final double? left;
+
+  /// Size as screen percentage (0.0 – 1.0)
+  final double widthFactor;
+
+  /// Rotation in degrees (easier than radians)
+  final double rotationDeg;
 
   const IllustrationImg({
     super.key,
     required this.path,
-    this.top = 0,
-    this.right = 0,
-    this.bottom = 0,
-    this.left = 0,
-    this.angle = 0,
-    this.width = 10,
+    this.top,
+    this.right,
+    this.bottom,
+    this.left,
+    this.widthFactor = 0.1, // 10% of screen width
+    this.rotationDeg = 0,
   });
+
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Positioned(
-      bottom: bottom,
+      top: top,
       right: right,
+      bottom: bottom,
+      left: left,
       child: Transform.rotate(
-        angle: angle,
+        angle: rotationDeg * math.pi / 180,
         child: Image.asset(
           path,
-          width: width,
+          width: screenWidth * widthFactor,
         ),
       ),
     );
@@ -88,29 +100,6 @@ class _LoginPageState extends State<LoginPage> {
           status: LoginStatus.success,
         );
       }
-      // final response = await http.post(
-      //   Uri.parse('$apiPath' 'users/login'),
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      //   body: jsonEncode({
-      //     'email': email,
-      //     'password': password,
-      //   }),
-      // );
-
-      // isLoading = false;
-
-      // final decodedBody = jsonDecode(response.body);
-
-      // if (response.statusCode == 200 && decodedBody['success'] == true) {
-      //   return LoginResponse(
-      //     status: LoginStatus.success,
-      //     user: User.fromJson(decodedBody['user']),
-      //   );
-      //   // set data to local storage or phone storage if login is sucessful.
-      //   // return decodedBody['user'];
-      // }
       else if (response.statusCode == 400) {
         return LoginResponse(
             status: LoginStatus.missingFields,
@@ -196,29 +185,26 @@ class _LoginPageState extends State<LoginPage> {
                   path: 'images/lightbulb.png',
                   bottom: 680,
                   right: 30,
-                  angle: 26,
-                  width: 40,
+                  rotationDeg: 26,
                 ),
                 IllustrationImg(
                   path: 'images/lightbulb.png',
                   bottom: 190,
-                  right: 410,
-                  angle: 31,
-                  width: 55,
+                  left: 50,
+                  rotationDeg: -32,
                 ),
                 IllustrationImg(
                   path: 'images/mario-question-mark.png',
-                  bottom: 600,
-                  right: 450,
-                  angle: 31,
-                  width: 40,
+                  top: 200,
+                  left: 30,
+                  rotationDeg: -45,
                 ),
                 IllustrationImg(
                   path: 'images/question-mark-cartoon.png',
-                  bottom: 220,
+                  bottom: 100,
                   right: 120,
-                  angle: 32,
-                  width: 100,
+                  rotationDeg: 32,
+                  widthFactor: 0.2,
                 ),
               ],
             ),
@@ -280,7 +266,7 @@ class _LoginPageState extends State<LoginPage> {
                           final profile = await fetchProfile();
                           print(profile.firstname);
                           Navigator.pushNamed(
-                              context, '/quizpage'); // <-- Routing here
+                              context, '/mainpage'); // <-- Routing here
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(

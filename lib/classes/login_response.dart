@@ -1,4 +1,3 @@
-import 'user.dart';
 import '../enum/enum.dart';
 
 class LoginResponse {
