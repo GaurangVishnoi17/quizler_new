@@ -78,11 +78,45 @@ class _MainPageState extends State<MainPage> {
                 ),
               ],
             ),
-            Text('Main Page'),
+            // settings button on right side of header
+            IconButton(
+              icon: Icon(Icons.settings, color: Colors.black87, size: 28),
+              iconSize: 32,
+              onPressed: () {
+                // TODO: navigate to settings page
+              },
+            ),
           ],
         ),
       ),
-      body: const Center(child: Text('main page')),
+      body: SafeArea(
+        child: Column(children: [
+          Expanded(
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.lime[50],
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10.0),
+                  child: Container(
+                    width: double.infinity,
+                    height: 150,
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 129, 177, 102),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+                // Container(),
+                // Container(),
+              ]),
+            ),
+          ),
+        ]),
+      ),
     );
   }
 }
