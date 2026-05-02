@@ -15,6 +15,42 @@ class MainPage extends StatefulWidget {
   State<MainPage> createState() => _MainPageState();
 }
 
+class MenuPageItem extends StatelessWidget {
+  final String title;
+  final String subTitle;
+  final String imgPath;
+
+  MenuPageItem(
+      {super.key,
+      required this.title,
+      required this.subTitle,
+      required this.imgPath});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: 220,
+      height: 200,
+      decoration: BoxDecoration(
+          // color: Colors.blue[600],
+          border: Border.all(color: Colors.blue[600]!, width: 2),
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.white70),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Image.asset(imgPath, width: 80, height: 80),
+          Text(title,
+              style: const TextStyle(fontSize: 18, color: Colors.black)),
+          Text(subTitle,
+              style: const TextStyle(fontSize: 14, color: Colors.black)),
+        ],
+      ),
+    );
+  }
+}
+
 Future<User> fetchProfile() async {
   final token = await storage.read(key: 'accessToken');
   final response = await http.get(
@@ -78,11 +114,54 @@ class _MainPageState extends State<MainPage> {
                 ),
               ],
             ),
-            Text('Main Page'),
+            IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/profile');
+              },
+              icon: const Icon(Icons.settings, color: Colors.black54, size: 28),
+            ),
           ],
         ),
       ),
-      body: const Center(child: Text('main page')),
+      body: SafeArea(
+          child: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(color: Colors.lime[50]),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.center,
+          spacing: 20,
+          children: [
+            Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                spacing: 20,
+                children: [
+                  MenuPageItem(
+                      title: 'Previous Quizzes',
+                      subTitle: 'Review your history',
+                      imgPath: 'images/history.png'),
+                  MenuPageItem(
+                      title: 'Anonymous Survey',
+                      subTitle: 'Share feedback privately',
+                      imgPath: 'images/hacker.png'),
+                ]),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                spacing: 20,
+                children: [
+                  MenuPageItem(
+                      title: 'Active Now',
+                      subTitle: 'Jump into live session',
+                      imgPath: 'images/list-to-do.png'),
+                  MenuPageItem(
+                      title: 'Leaderboard',
+                      subTitle: 'See top performers',
+                      imgPath: 'images/podium.png'),
+                ]),
+          ],
+        ),
+      )),
     );
   }
 }
