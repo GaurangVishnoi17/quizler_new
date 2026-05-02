@@ -114,11 +114,54 @@ class _MainPageState extends State<MainPage> {
                 ),
               ],
             ),
-            Text('Main Page'),
+            IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/profile');
+              },
+              icon: const Icon(Icons.settings, color: Colors.black54, size: 28),
+            ),
           ],
         ),
       ),
-      body: const Center(child: Text('main page')),
+      body: SafeArea(
+          child: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: BoxDecoration(color: Colors.lime[50]),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisAlignment: MainAxisAlignment.center,
+          spacing: 20,
+          children: [
+            Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                spacing: 20,
+                children: [
+                  MenuPageItem(
+                      title: 'Previous Quizzes',
+                      subTitle: 'Review your history',
+                      imgPath: 'images/history.png'),
+                  MenuPageItem(
+                      title: 'Anonymous Survey',
+                      subTitle: 'Share feedback privately',
+                      imgPath: 'images/hacker.png'),
+                ]),
+            Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                spacing: 20,
+                children: [
+                  MenuPageItem(
+                      title: 'Active Now',
+                      subTitle: 'Jump into live session',
+                      imgPath: 'images/list-to-do.png'),
+                  MenuPageItem(
+                      title: 'Leaderboard',
+                      subTitle: 'See top performers',
+                      imgPath: 'images/podium.png'),
+                ]),
+          ],
+        ),
+      )),
     );
   }
 }
